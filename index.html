@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placar</title>
+  <style>
+    body {
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    #time {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      font-size: 100px;
+    }
+    #main {
+      border: 1px solid #ccc;
+      padding: 60px;
+      font-size: 30px;
+      display: inline-block;
+    }
+    #valid {
+      margin-top: 60px;
+      font-size: 30px;
+    }
+    #instructions {
+      margin-top: 10px;
+    }
+    #inputs {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="time"></div>
+  <div id="main">
+    <h1>🚦 1BTTRANS</h1>
+    <h2>📦 PALETES TOTAL: <span id="stored">0</span></h2>
+    <h2>🚀 BDP: <span id="percentage">0</span>%</h2>
+  </div>
+  <div id="valid">
+    <h3>📥 BDP TOTAL: <span id="validCount">0</span></h3>
+  </div>
+  <div id="instructions">
+    <p>Pressione a tecla "+" para adicionar um palete armazenado</p>
+    <p>Pressione a tecla "-" para registrar um rejeito</p>
+  </div>
+  <div id="inputs">
+    <label>
+      Paletes Armazenados:
+      <input type="number" id="storedInput" value="0">
+    </label>
+    <br />
+    <label>
+      Rejeitos:
+      <input type="number" id="rejectsInput" value="0">
+    </label>
+  </div>
+
+  <script>
+    let stored = 0;
+    let rejects = 0;
+
+    const storedElement = document.getElementById('stored');
+    const percentageElement = document.getElementById('percentage');
+    const validCountElement = document.getElementById('validCount');
+    const timeElement = document.getElementById('time');
+    const storedInput = document.getElementById('storedInput');
+    const rejectsInput = document.getElementById('rejectsInput');
+
+    const targetPercentage = 93;
+
+    function updateUI() {
+      const valid = stored - rejects;
+      const percentage = stored > 0 ? ((valid / stored) * 100).toFixed(2) : 0;
+
+      storedElement.textContent = stored;
+      percentageElement.textContent = percentage;
+      validCountElement.textContent = valid;
+
+      document.body.style.backgroundColor = percentage >= targetPercentage ? 'green' : 'red';
+    }
+
+    function updateTime() {
+      const now = new Date();
+      timeElement.textContent = now.toLocaleTimeString();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '+') {
+        stored++;
+      } else if (e.key === '-') {
+        rejects++;
+      }
+      updateUI();
+    });
+
+    storedInput.addEventListener('input', (e) => {
+      stored = Number(e.target.value);
+      updateUI();
+    });
+
+    rejectsInput.addEventListener('input', (e) => {
+      rejects = Number(e.target.value);
+      updateUI();
+    });
+
+    setInterval(updateTime, 1000);
+    updateTime();
+    updateUI();
+  </script>
+</body>
+</html>
